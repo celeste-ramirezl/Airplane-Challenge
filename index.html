@@ -12,7 +12,8 @@
 		<div id="players"></div>
 		<div id="enemies"></div>
         <div id="missiles"></div>
-        <div id="newenemies"></div>
+        <div id="newenemies"></div> 
+       
 	</div>
 
 	<script type="text/javascript">
@@ -20,7 +21,7 @@
 			left: 450,
 			top: 620
 		}
-
+//Establecemos las variables del 'enemigo' dentro de un array
 		var enemies = [
 			{left: 350, top: 200},
 			{left: 450, top: 250},
@@ -35,97 +36,146 @@
 
 		var missiles = []
 
-                      function random(max,min){
-                      return Math.floor(Math.random()* (max-min +1))+min;
-                      }
+function random(max,min){
+  return Math.floor(Math.random()* (max-min +1))+min;
+}
 
-                      function drawPlayer(){
-                                 content = "<div class='player' style='left:"+player.left+"px; top:"+player.top+"px'></div>";
-                                 document.getElementById("players").innerHTML = content;
-                      }
+ function drawPlayer(){
+  content = "<div class='player' style='left:"+player.left+"px; top:"+player.top+"px'></div>";
+  document.getElementById("players").innerHTML = content;
+}
 
-                      function drawEnemies(){
-                                 content = "";
-                                 console.log(enemies);
-                                 for(var x = 0; x <enemies.length; x ++){
-                                  if(enemies[x].top< 630){
-                                            content += "<div class='enemy' style='left:"+enemies[x].left+"px; top:"+enemies[x].top+"px'></div>";
-                                 }else{enemies[x] = {left: random(0,800), top: 0}}
-                                 }
-                                 document.getElementById("enemies").innerHTML = content;
-                      }
+function drawEnemies(){
+  content = "";
+  console.log(enemies);
+  for(var x = 0; x <enemies.length; x ++){
+     if(enemies[x].top< 630){
+     content += "<div class='enemy' style='left:"+enemies[x].left+"px; top:"+enemies[x].top+"px'></div>";
+     }else{enemies[x] = {left: random(0,800), top: 0}}
+  }
+document.getElementById("enemies").innerHTML = content;
+}
 
-                      function drawNewenemies(){
-                        content = "";
-                                 console.log(newenemies);
-                                 for(var x = 0; x <newenemies.length; x ++){
-                                  if(newenemies[x].top< 630){
-                                            content += "<div class='newenemies' style='left:"+newenemies[x].left+"px; top:"+newenemies[x].top+"px'></div>";
-                                 }else{newenemies[x] = {left: random(0,800), top: 0}}
-                                 }
-                                 document.getElementById("newenemies").innerHTML = content;
+ function drawNewenemies(){
+ content = "";
+ console.log(newenemies);
+for(var x = 0; x <newenemies.length; x ++){
+  if(newenemies[x].top< 630){
+   content += "<div class='newenemies' style='left:"+newenemies[x].left+"px; top:"+newenemies[x].top+"px'></div>";
+     }else{newenemies[x] = {left: random(0,800), top: 0}}
+   }
+ document.getElementById("newenemies").innerHTML = content;
 
-                      }
+ }
 
-                      function drawMissiles(){
-                                  content = "";
-                                  for(var x =0; x<missiles.length; x++){
-                                    content+="<div class = 'missile' style='left: "+missiles[x].left+"px; top: "+missiles[x].top+"px'></div>"
-                                  }
-                                  document.getElementById("missiles").innerHTML = content;
-                      }
+ //Función para dibujar misiles de juego utilizados por el avión
+ function drawMissiles(){
+  content = "";
+  for(var x =0; x<missiles.length; x++){
+    content+="<div class = 'missile' style='left: "+missiles[x].left+"px; top: "+missiles[x].top+"px'></div>"
+  }
+ document.getElementById("missiles").innerHTML = content;
+ }
+//Función para añadir movimiento a los aviones enemigos 
+function moveEnemies(){
+  for(var x = 0; x <enemies.length; x ++){
+    enemies[x].top = enemies[x].top +.6; 
+   }
+}
+//Funcón que agrega movimiento/animación al nuevo avión enemigo
+function moveNewenemies(){
+  for(var x = 0; x <newenemies.length; x ++){
+     newenemies[x].top = newenemies[x].top +.6; 
+     }
+}
+   //Para mover los misiles del avión                   
+ function moveMissiles(){
+   for(var x = 0; x<missiles.length; x++){
+     missiles[x].top = missiles[x].top-5;
+    }
+ }
+ document.onkeydown = function(e){
+  console.log(e);
+ if(e.keyCode === 37 && player.left > -10){ //left
+  player.left -= 10;
+}
+if(e.keyCode === 39 && player.left < 800){ //right
+  player.left += 10;
+  }
+ if(e.keyCode === 38 && player.top >450){ //up
+  player.top -= 10;
+  }
+ if(e.keyCode === 40 && player.top <620){ //down
+    player.top += 10;
+  }
+  if(e.keyCode === 32){ //fire
+ missiles.push({left: (player.left+65), top: (player.top-8)})
+ drawMissiles();
+}
+ drawPlayer();
+ }
+ // Esta es la función que detiene los enemigos cuando tocan los misiles
+function stopEnemies(){
+  // Recorrer los enemigos de atrás hacia adelante para evitar problemas al eliminarlos
+  for(var i = enemies.length - 1; i >= 0; i--){
+    // Recorrer los misiles de atrás hacia adelante por la misma razón
+    for(var j = missiles.length - 1; j >= 0; j--){
+      // Calcular la distancia horizontal y vertical entre el enemigo y el misil
+      var dx = Math.abs(enemies[i].left - missiles[j].left);
+      var dy = Math.abs(enemies[i].top - missiles[j].top);
+      // Si la distancia es menor que un umbral, hay una colisión
+      if(dx < 20 && dy < 20){
+        // Eliminar el enemigo y el misil de sus arreglos
+        enemies.splice(i, 1);
+        missiles.splice(j, 1);
 
-                      function moveEnemies(){
-                        for(var x = 0; x <enemies.length; x ++){
-                        enemies[x].top = enemies[x].top +.6; 
-                        }
-                      }
-                      function moveNewenemies(){
-                        for(var x = 0; x <newenemies.length; x ++){
-                        newenemies[x].top = newenemies[x].top +.6; 
-                        }
-                      }
-                      
-                      function moveMissiles(){
-                        for(var x = 0; x<missiles.length; x++){
-                          missiles[x].top = missiles[x].top-5;
-                        }
-                      }
-                      document.onkeydown = function(e){
-                                 console.log(e);
-                                 if(e.keyCode === 37 && player.left > -10){ //left
-                                            player.left -= 10;
-                                 }
-                                 if(e.keyCode === 39 && player.left < 800){ //right
-                                            player.left += 10;
-                                 }
-                                 if(e.keyCode === 38 && player.top >450){ //up
-                                            player.top -= 10;
-                                 }
-                                 if(e.keyCode === 40 && player.top <620){ //down
-                                            player.top += 10;
-                                 }
-                                 if(e.keyCode === 32){ //fire
-                                            missiles.push({left: (player.left+65), top: (player.top-8)})
-                                            drawMissiles();
-                                 }
-                      drawPlayer();
-                      }
+        break;
+       
+      }
+    }
+  }
+}
+//Creamos funciones para detener a los aviones enemigos
+function stopNewnemies(){
+  // Recorrer los enemigos de atrás hacia adelante para evitar problemas al eliminarlos
+  for(var i = newenemies.length - 1; i >= 0; i--){
+    // Recorrer los misiles de atrás hacia adelante por la misma razón
+    for(var j = missiles.length - 1; j >= 0; j--){
+      // Calcular la distancia horizontal y vertical entre el enemigo y el misil
+      var dx = Math.abs(newenemies[i].left - missiles[j].left);
+      var dy = Math.abs(newenemies[i].top - missiles[j].top);
+      // Si la distancia es menor que un umbral, hay una colisión
+      if(dx < 20 && dy < 20){
+        // Eliminar el enemigo y el misil de sus arreglos
+        newenemies.splice(i, 1);
+        missiles.splice(j, 1);
+//Idea
+         // Agregar algún efecto de explosión 
+        break;
 
-                      function gameLoop() {
-                      drawPlayer();
+      }
+     }
+    }
+  }
 
-                      moveEnemies();
-                      drawEnemies();
-
-                      moveNewenemies();
-                      drawNewenemies();
-
-                      moveMissiles();
-                      drawMissiles();
-                      setTimeout(gameLoop, 10)
-                      }
-                      gameLoop();
+function gameLoop() {
+ drawPlayer();
+//Llamar Funcion que crea y anima los aviones enemigos
+ moveEnemies();
+ drawEnemies();
+//Lamar a la función que dibuja y anima al nuevo avión enemigo
+ moveNewenemies();
+  drawNewenemies();
+//Función que crea y anima los misiles del avión 
+ moveMissiles();
+  drawMissiles();
+  setTimeout(gameLoop, 10)
+ // Llamar a la función que detiene los enemigos
+ stopEnemies();    
+  // Función que detenie al nuevo enemigo
+  stopNewnemies();
+ }
+ gameLoop();
 	</script>
 </body>
 </html>
