@@ -13,7 +13,9 @@
 		<div id="enemies"></div>
         <div id="missiles"></div>
         <div id="newenemies"></div> 
-       
+        <div class="score">Score: </div>
+        <div class="airplanegame">Airplane Game</div>
+        <div class="message">Juego finalizado</div>
 	</div>
 
 	<script type="text/javascript">
@@ -44,7 +46,7 @@ function random(max,min){
   content = "<div class='player' style='left:"+player.left+"px; top:"+player.top+"px'></div>";
   document.getElementById("players").innerHTML = content;
 }
-
+//función que agruega aviones enemigos al juego
 function drawEnemies(){
   content = "";
   console.log(enemies);
@@ -55,7 +57,7 @@ function drawEnemies(){
   }
 document.getElementById("enemies").innerHTML = content;
 }
-
+//Función que agrega nuevos aviones enemigos al juego
  function drawNewenemies(){
  content = "";
  console.log(newenemies);
@@ -94,6 +96,7 @@ function moveNewenemies(){
      missiles[x].top = missiles[x].top-5;
     }
  }
+ //Función que detecta los movimientos 
  document.onkeydown = function(e){
   console.log(e);
  if(e.keyCode === 37 && player.left > -10){ //left
@@ -114,7 +117,48 @@ if(e.keyCode === 39 && player.left < 800){ //right
 }
  drawPlayer();
  }
- // Esta es la función que detiene los enemigos cuando tocan los misiles
+///////////////AQUI HAY CAMBIOS/////////////////////
+// Crear una variable para contar los aviones eliminados
+var score = 0;
+// Crear un elemento  para mostrar el puntaje
+var scoreElement = document.createElement("div");
+// Asignarle una clase y un estilo
+scoreElement.className = "score";
+scoreElement.style.position = "absolute";
+scoreElement.style.left = "10px";
+scoreElement.style.top = "10px";
+scoreElement.style.color = "white";
+scoreElement.style.fontSize = "20px";
+// Agregar el elemento al documento
+document.body.appendChild(scoreElement);
+
+// Función que actualiza el score y lo muestra en el elemento
+function updateScore(){
+  // Aumentar el score en uno
+  score++;
+  // Mostrar el score en el elemento HTML
+  scoreElement.innerHTML = "Score: " + score;
+}
+//////////////////ACA MOFIDIQUE AUN QUE YA ANDA BIEN 
+// Crear una variable para indicar si el juego ha terminado o no
+var gameOver = false;
+
+// Crear una función que muestre el mensaje 'juego finalizado' si el juego ha terminado
+function checkGameOver(){
+  // Comprobar si no quedan más aviones enemigos
+  if(enemies.length == 0 && newenemies.length == 0){
+    // Cambiar el valor de la variable gameOver a verdadero
+    gameOver = true;
+  }
+  // Si el juego ha terminado, mostrar el mensaje 'juego finalizado' con la función alert()
+  if(gameOver){
+    alert("Juego finalizado");
+  }
+}
+
+////////////////////////
+
+// las funciones que detienen a los enemigos y que llaman a la función updateScore
 function stopEnemies(){
   // Recorrer los enemigos de atrás hacia adelante para evitar problemas al eliminarlos
   for(var i = enemies.length - 1; i >= 0; i--){
@@ -128,14 +172,18 @@ function stopEnemies(){
         // Eliminar el enemigo y el misil de sus arreglos
         enemies.splice(i, 1);
         missiles.splice(j, 1);
-
+        // Llamar a la función updateScore
+        updateScore();
+        //////////////LLAMAR A LA FUNCIÓN CHEEK GAME OVER
+        checkGameOver();
+        ////////////////////
         break;
        
       }
     }
   }
 }
-//Creamos funciones para detener a los aviones enemigos
+
 function stopNewnemies(){
   // Recorrer los enemigos de atrás hacia adelante para evitar problemas al eliminarlos
   for(var i = newenemies.length - 1; i >= 0; i--){
@@ -149,14 +197,17 @@ function stopNewnemies(){
         // Eliminar el enemigo y el misil de sus arreglos
         newenemies.splice(i, 1);
         missiles.splice(j, 1);
-//Idea
-         // Agregar algún efecto de explosión 
+        // Llamar a la función updateScore
+        updateScore();
+        ////////////////LAMAR A LA FUNCIÓN GAME OVER
+        checkGameOver();
+        //////////////////////
         break;
-
+       
       }
-     }
     }
   }
+}
 
 function gameLoop() {
  drawPlayer();
