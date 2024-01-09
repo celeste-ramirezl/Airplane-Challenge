@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Spice&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bungee+Spice&family=Press+Start+2P&display=swap');
 body {
     background-image: url("espacio7.png");
     background-position: center center;
@@ -5,19 +7,40 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+ /* Estilo para el elemento que muestra el score */
+ .score {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    color: white;
+    font-size: 21px;
+    font-family: 'Bungee Spice';
+  }
+
+  .airplanegame {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: rgb(255, 174, 0);
+    font-size: 20px;
+    font-family: 'Press Start 2P';
+  }
+
+/*Estilo para el avión que se encuentra en la parte inferior */
 .player {
     background-image: url("avion1.png");
     width: 160px;
     height: 162px;
     position: absolute;  
 }
+/*Estilo para el avion enemigo*/
 .enemy {
     background-image: url("enemy.png");
     width: 73px;
     height: 75px;
     position: absolute;
 }
-
+/*Estilo para los nuevos aviones enemigos*/
 .newenemies {
     background-image: url("enemy2.png");
     width: 97px;
@@ -25,10 +48,21 @@ body {
     position: absolute;
 }
 
-
+/*Estilo para el misil del avion*/
 .missile {
     position: absolute;
     background-color: rgb(255, 145, 0);
     width: 2px;
     height: 10px;
 }
+ /* Estilo para el elemento que muestra el mensaje */
+ .message {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 40px;
+    display: none;
+  }
+
